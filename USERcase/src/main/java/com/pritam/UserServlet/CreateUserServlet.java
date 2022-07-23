@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.Objects;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class CreateUserServlet
  */
-@WebServlet(urlPatterns ="/addServlet",initParams = {@WebInitParam(name="dburl",value="jdbc:mysql://localhost:3306/mydb"),@WebInitParam(name="uname",value="root"),@WebInitParam(name="pwd",value="Godavari@1343")})
+@WebServlet("/addServlet")
 public class CreateUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
@@ -28,23 +29,22 @@ public class CreateUserServlet extends HttpServlet {
 //	private String pwd="Godavari@1343";
     
     @Override
-   public void init(ServletConfig config) {
-	   System.out.println("init method called..");
-	   //Establishing the connection with database
-	   // init calls only once in the servlet lifecycle hence we establishing the connection of database
-	   try {
-		   Class.forName("com.mysql.cj.jdbc.Driver");
-		   //System.out.println("init method called..");
-		    connection=DriverManager.getConnection(config.getInitParameter("dburl"),config.getInitParameter("uname"),config.getInitParameter("pwd"));
-	} catch (SQLException e) {
-		e.printStackTrace();
-	}
-	   catch(ClassNotFoundException e) {
-		   e.printStackTrace();
-	   }
-	   
-	   
-   }
+    public void init(ServletConfig config) {
+ 	   //Establishing the connection with database
+ 	   // init calls only once in the servlet lifecycle hence we establishing the connection of database
+ 	   try {
+ 		   ServletContext context = config.getServletContext();
+ 		   Class.forName("com.mysql.cj.jdbc.Driver");
+ 		    connection=DriverManager.getConnection(context.getInitParameter("dburl"),context.getInitParameter("dbuname"),context.getInitParameter("dbpwd"));
+ 	} catch (SQLException e) {
+ 		e.printStackTrace();
+ 	}
+ 	   catch(ClassNotFoundException e) {
+ 		   e.printStackTrace();
+ 	   }
+ 	   
+ 	   
+    }
 	
 
 	/**

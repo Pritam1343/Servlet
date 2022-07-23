@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,17 +22,18 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class CreateUserServlet
  */
-@WebServlet("/readServlet")
+//@WebServlet("/readServlet") //We have configured using web.xml hence we don't need annotation
 public class ReadUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
 	    
-   public void init() {
+   public void init(ServletConfig config) {
 	   //Establishing the connection with database
 	   // init calls only once in the servlet lifecycle hence we establishing the connection of database
 	   try {
+		   ServletContext context = config.getServletContext();
 		   Class.forName("com.mysql.cj.jdbc.Driver");
-		    connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb","root","Godavari@1343");
+		    connection=DriverManager.getConnection(context.getInitParameter("dburl"),context.getInitParameter("dbuname"),context.getInitParameter("dbpwd"));
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
