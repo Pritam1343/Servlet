@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,23 +19,23 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class CreateUserServlet
  */
-@WebServlet("/addServlet")
+@WebServlet(urlPatterns ="/addServlet",initParams = {@WebInitParam(name="dburl",value="jdbc:mysql://localhost:3306/mydb"),@WebInitParam(name="uname",value="root"),@WebInitParam(name="pwd",value="Godavari@1343")})
 public class CreateUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Connection connection;
-	private String url="jdbc:mysql://localhost:3306/mydb";
-	private String uname="root";
-	private String pwd="Godavari@1343";
+//	private String url="jdbc:mysql://localhost:3306/mydb";
+//	private String uname="root";
+//	private String pwd="Godavari@1343";
     
-    
-   public void init() {
+    @Override
+   public void init(ServletConfig config) {
 	   System.out.println("init method called..");
 	   //Establishing the connection with database
 	   // init calls only once in the servlet lifecycle hence we establishing the connection of database
 	   try {
 		   Class.forName("com.mysql.cj.jdbc.Driver");
 		   //System.out.println("init method called..");
-		    connection=DriverManager.getConnection(url,uname,pwd);
+		    connection=DriverManager.getConnection(config.getInitParameter("dburl"),config.getInitParameter("uname"),config.getInitParameter("pwd"));
 	} catch (SQLException e) {
 		e.printStackTrace();
 	}
